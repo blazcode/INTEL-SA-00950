@@ -8,7 +8,7 @@
 # Hypervisor patches are not required to resolve the vulnerability. Contact hardware vendors for a firmware update for affected CPU if one is not already available.
 #
 # Interpreting script output:
-# Affected = Obtain and isntall firmware update from hardware vendor ASAP if microcode is bleow mitigated version! Reference Intel documenation for details.
+# Affected = Obtain and install firmware update from hardware vendor ASAP if microcode is below mitigated version! Reference Intel documenation for details.
 # Not Affected = Host CPU is not affected by CVE-2023-23583, no action is required.
 # Mitigated = Host CPU has already mitigated microcode, no action is required.
 #

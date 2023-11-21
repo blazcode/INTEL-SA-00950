@@ -8,9 +8,9 @@
 # Hypervisor patches are not required to resolve the vulnerability. Contact hardware vendors for a firmware update for affected CPU if one is not already available.
 #
 # Interpreting script output:
-# Affected = Reference Intel advisory for required mitigated microcode version; contact hardware vendor
-# Not Affected = Host CPU is not affected by CVE-2023-23583
-# Mitigated = Host CPU has already mitigated microcode
+# Affected = Obtain and isntall firmware update from hardware vendor ASAP if microcode is bleow mitigated version! Reference Intel documenation for details.
+# Not Affected = Host CPU is not affected by CVE-2023-23583, no action is required.
+# Mitigated = Host CPU has already mitigated microcode, no action is required.
 #
 # Prerequisites:
 # https://developer.vmware.com/web/tool/13.1.0/vmware-powercli/
@@ -34,17 +34,17 @@ $reportPath = "C:\Users\Administrator\Desktop\"
 
 function Convert-EaxToHex {
     param (
-        [string]$BinaryString
+        [string]$binaryString
     )
 
     # Remove colons (:) if present in the binary string
-    $BinaryString = $BinaryString -replace ":", ""
+    $binaryString = $binaryString -replace ":", ""
 
     # Convert binary string to hexadecimal
-    $HexString = [Convert]::ToString([Convert]::ToInt32($BinaryString, 2), 16).ToUpper()
+    $hexString = [Convert]::ToString([Convert]::ToInt32($binaryString, 2), 16).ToUpper()
 
     # Return the hexadecimal string
-    return "$HexString"
+    return "$hexString"
 }
 
 Import-Module VMware.PowerCLI
@@ -83,7 +83,7 @@ $vmHostInfo = @()
 $vmHosts = Get-VMHost
 
 foreach ($vmHost in $vmHosts) {
-    $intelSa00950 = "Not Affected"
+    $intelSa00950 = "Not Affected - no action required."
 
     # Get host CPUID
     $vmHostCpuId = Convert-EaxToHex($vmHost.ExtensionData.Hardware.CpuPkg[0].CpuFeature[1].Eax)
@@ -92,7 +92,7 @@ foreach ($vmHost in $vmHosts) {
     foreach ($affectedCpuId in $affectedCpuIds){
         if ($vmHostCpuId -eq $affectedCpuId) {
             $cpuId = $affectedCpuId
-            $intelSa00950 = "Affected"
+            $intelSa00950 = "Affected - Obtain and isntall firmware update from hardware vendor ASAP if microcode is bleow mitigated version!"
         }
     }
 
@@ -100,7 +100,7 @@ foreach ($vmHost in $vmHosts) {
     foreach ($mitigatedCpuId in $mitigatedCpuIds){      
         if ($vmHostCpuId -eq $mitigatedCpuId) {
             $cpuId = $mitigatedCpuId
-            $intelSa00950 = "Mitigated"
+            $intelSa00950 = "Mitigated - No action required."
         }
     }
       
